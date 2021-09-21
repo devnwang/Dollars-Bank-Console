@@ -3,10 +3,11 @@ package com.dollarsbank.utility;
 public class ConsolePrinterUtility {
 
     // Default colors for the different types of messages
-    public static final ColorsUtility MSG_HEADER = ColorsUtility.ANSI_BLUE;
-    public static final ColorsUtility MSG_ERROR = ColorsUtility.ANSI_RED;
-    public static final ColorsUtility MSG_CHOICE = ColorsUtility.ANSI_GREEN;
-    public static final ColorsUtility USER_INPUT = ColorsUtility.ANSI_CYAN;
+    public static final String MSG_HEADER = ColorsUtility.ANSI_BLUE.value;
+    public static final String MSG_ERROR = ColorsUtility.ANSI_RED.value;
+    public static final String MSG_CHOICE = ColorsUtility.ANSI_GREEN.value;
+    public static final String USER_INPUT = ColorsUtility.ANSI_CYAN.value;
+    public static final String RESET_TEXT = ColorsUtility.ANSI_RESET.value;
     
     // Welcome message seen when a user is not logged in
     public static final void defaultWelcomMsg() {
@@ -55,7 +56,7 @@ public class ConsolePrinterUtility {
         int msgLength = getMaxStringLen(msg);
         
         printLine(msgLength);
-        System.out.printf("%s| %s |%s", MSG_HEADER, padString(msg, msgLength), ColorsUtility.ANSI_RESET);
+        System.out.printf("%s| %s |%s%n", MSG_HEADER, padString(msg, msgLength), RESET_TEXT);
         printLine(msgLength);
 
     }
@@ -63,7 +64,7 @@ public class ConsolePrinterUtility {
     // Helper functions used to format the boxed message nicely
 
     private static void printLine(int maxWidth) {
-        System.out.println(MSG_HEADER + "+" + fill('-', maxWidth + 2) + "+" + ColorsUtility.ANSI_RESET);
+        System.out.println(MSG_HEADER + "+" + fill('-', maxWidth + 2) + "+" + RESET_TEXT);
     }
 
     private static int getMaxStringLen(String string) {
