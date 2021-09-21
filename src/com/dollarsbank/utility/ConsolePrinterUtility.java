@@ -6,6 +6,7 @@ public class ConsolePrinterUtility {
     public static final ColorsUtility MSG_HEADER = ColorsUtility.ANSI_BLUE;
     public static final ColorsUtility MSG_ERROR = ColorsUtility.ANSI_RED;
     public static final ColorsUtility MSG_CHOICE = ColorsUtility.ANSI_GREEN;
+    public static final ColorsUtility USER_INPUT = ColorsUtility.ANSI_CYAN;
     
     // Welcome message seen when a user is not logged in
     public static final void defaultWelcomMsg() {
