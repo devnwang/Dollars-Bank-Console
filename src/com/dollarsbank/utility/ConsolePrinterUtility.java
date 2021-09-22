@@ -6,40 +6,48 @@ public class ConsolePrinterUtility {
     public static final String MSG_HEADER = ColorsUtility.ANSI_BLUE.value;
     public static final String MSG_ERROR = ColorsUtility.ANSI_RED.value;
     public static final String MSG_CHOICE = ColorsUtility.ANSI_GREEN.value;
+    public static final String MSG_VALIDATION = ColorsUtility.ANSI_PURPLE.value;
+    public static final String MSG_SYS = ColorsUtility.ANSI_YELLOW.value;
     public static final String USER_INPUT = ColorsUtility.ANSI_CYAN.value;
     public static final String RESET_TEXT = ColorsUtility.ANSI_RESET.value;
     
     // Welcome message seen when a user is not logged in
-    public static final void defaultWelcomMsg() {
+    public static final void printGuestWelcomeMsg() {
         printBoxedMsg("DOLLARSBANK Welcomes You!");
     }
 
     // Welcome message when a user is logged in
-    public static final void customerWelcomeMsg() {
+    public static final void printCustomerWelcomeMsg() {
         printBoxedMsg("WELCOME Customer!!!");
     }
 
     // Instructions when created a new account
-    public static final void newAcctMsg() {
+    public static final void printNewAcctHeader() {
         printBoxedMsg("Enter Details for New Account");
     }
 
     // Login message
-    public static final void loginCredentialsMsg() {
+    public static final void printLoginHeader() {
         printBoxedMsg("Enter Login Details");
     }
 
     // 5 Recent Transactions header
-    public static final void recentTransactionsMsg() {
+    public static final void printRecentTransHeader() {
         printBoxedMsg("5 Recent Transactions");
     }
 
+    // Error Message
     public static final void printErrorMessage(String msg) {
         System.out.println(MSG_ERROR + msg + RESET_TEXT);
     }
 
+    // Asking for user input
+    public static final void askForInput(String msg) {
+        System.out.println(MSG_CHOICE + msg + USER_INPUT);
+    }
+
     // Menu for users who hasn't logged in yet
-    public static String defaultMenuOptions() {
+    public static String guestMenuOptions() {
         return
             "1. Create New Account\n" +
             "2. Login\n" +
@@ -47,7 +55,7 @@ public class ConsolePrinterUtility {
     }
 
     // Menu once user has logged in
-    public static String loggedInMenuOptions() {
+    public static String customerMenuOptions() {
         return
             "1. Deposit Amount\n" +
             "2. Withdraw Amount\n" +
