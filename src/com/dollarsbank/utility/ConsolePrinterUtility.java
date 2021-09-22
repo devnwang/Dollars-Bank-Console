@@ -34,21 +34,27 @@ public class ConsolePrinterUtility {
         printBoxedMsg("5 Recent Transactions");
     }
 
+    public static final void printErrorMessage(String msg) {
+        System.out.println(MSG_ERROR + msg + RESET_TEXT);
+    }
+
     // Menu for users who hasn't logged in yet
-    public static void defaultMenuOptions() {
-        System.out.println("1. Create New Account");
-        System.out.println("2. Login");
-        System.out.println("3. Exit");
+    public static String defaultMenuOptions() {
+        return
+            "1. Create New Account\n" +
+            "2. Login\n" +
+            "3. Exit\n";
     }
 
     // Menu once user has logged in
-    public static void loggedInMenuOptions() {
-        System.out.println("1. Deposit Amount");
-        System.out.println("2. Withdraw Amount");
-        System.out.println("3. Funds Transfer");
-        System.out.println("4. View 5 Recent Transactions");
-        System.out.println("5. Display Customer Information");
-        System.out.println("6. Sign Out");
+    public static String loggedInMenuOptions() {
+        return
+            "1. Deposit Amount\n" +
+            "2. Withdraw Amount\n" +
+            "3. Funds Transfer\n" +
+            "4. View 5 Recent Transactions\n" +
+            "5. Display Customer Information\n" +
+            "6. Sign Out\n";
     }
 
     // Helper function used to box a message
