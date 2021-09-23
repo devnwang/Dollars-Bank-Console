@@ -14,10 +14,28 @@ public class Customer {
     private String address;
     private String phoneNumber;
     private String email;
-    private List<Account> accounts;
+    
+    // For now, a customer can have only one account
+    // private List<Account> accounts;
+    private Account account;
+    
     private String[] transactions;
 
-    public Customer(String username, String password, String fName, String lName, String address, String phoneNumber, String email, List<Account> accounts, String[] transactions) {
+    // Keep constructor for later when expanding functionality to have multiple accounts
+    // public Customer(String username, String password, String fName, String lName, String address, String phoneNumber, String email, List<Account> accounts, String[] transactions) {
+    //     this.customerId = ++customerCnt;
+    //     this.username = username;
+    //     this.password = password;
+    //     this.fName = fName;
+    //     this.lName = lName;
+    //     this.address = address;
+    //     this.phoneNumber = phoneNumber;
+    //     this.email = email;
+    //     this.accounts = accounts;
+    //     this.transactions = transactions;
+    // }
+
+    public Customer(String username, String password, String fName, String lName, String address, String phoneNumber, String email, Account accounts, String[] transactions) {
         this.customerId = ++customerCnt;
         this.username = username;
         this.password = password;
@@ -26,7 +44,7 @@ public class Customer {
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.email = email;
-        this.accounts = accounts;
+        this.account = account;
         this.transactions = transactions;
     }
 
@@ -94,12 +112,20 @@ public class Customer {
         this.email = email;
     }
 
-    public List<Account> getAccounts() {
-        return this.accounts;
+    // public List<Account> getAccounts() {
+    //     return this.accounts;
+    // }
+
+    // public void setAccounts(List<Account> accounts) {
+    //     this.accounts = accounts;
+    // }
+
+    public Account getAccount() {
+        return this.account;
     }
 
-    public void setAccounts(List<Account> accounts) {
-        this.accounts = accounts;
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
     public String[] getTransactions() {
@@ -121,7 +147,8 @@ public class Customer {
             ", address='" + getAddress() + "'" +
             ", phoneNumber='" + getPhoneNumber() + "'" +
             ", email='" + getEmail() + "'" +
-            ", accounts='" + getAccounts() + "'" +
+            // ", accounts='" + getAccounts() + "'" +
+            ", account='" + getAccount() + "'" +
             ", transactions='" + getTransactions() + "'" +
             "}";
     }
