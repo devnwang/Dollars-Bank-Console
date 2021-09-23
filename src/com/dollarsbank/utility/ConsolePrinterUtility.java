@@ -12,28 +12,28 @@ public class ConsolePrinterUtility {
     public static final String RESET_TEXT = ColorsUtility.ANSI_RESET.value;
     
     // Welcome message seen when a user is not logged in
-    public static final void printGuestWelcomeMsg() {
-        printBoxedMsg("DOLLARSBANK Welcomes You!");
+    public static final String getGuestMenu() {
+        return createBoxedMsg("DOLLARSBANK Welcomes You!") + guestMenuOptions();
     }
 
     // Welcome message when a user is logged in
-    public static final void printCustomerWelcomeMsg() {
-        printBoxedMsg("WELCOME Customer!!!");
+    public static final String getCustomerMenu() {
+        return createBoxedMsg("WELCOME Customer!!!") + customerMenuOptions();
     }
 
     // Instructions when created a new account
     public static final void printNewAcctHeader() {
-        printBoxedMsg("Enter Details for New Account");
+        System.out.println(createBoxedMsg("Enter Details for New Account"));
     }
 
     // Login message
-    public static final void printLoginHeader() {
-        printBoxedMsg("Enter Login Details");
+    public static final String getLoginHeader() {
+        return createBoxedMsg("Enter Login Details");
     }
 
     // 5 Recent Transactions header
-    public static final void printRecentTransHeader() {
-        printBoxedMsg("5 Recent Transactions");
+    public static final String getRecentTransHeader() {
+        return createBoxedMsg("5 Recent Transactions");
     }
 
     // Error Message
@@ -66,19 +66,21 @@ public class ConsolePrinterUtility {
     }
 
     // Helper function used to box a message
-    private static void printBoxedMsg(String msg) {
+    private static String createBoxedMsg(String msg) {
         int msgLength = getMaxStringLen(msg);
+        StringBuffer sb = new StringBuffer(100);
         
-        printLine(msgLength);
-        System.out.printf("%s| %s |%s%n", MSG_HEADER, padString(msg, msgLength), RESET_TEXT);
-        printLine(msgLength);
+        sb.append(boxedLine(msgLength));
+        sb.append(String.format("%s| %s |%s%n", MSG_HEADER, padString(msg, msgLength), RESET_TEXT));
+        sb.append(boxedLine(msgLength));
 
+        return sb.toString();
     }
 
     // Helper functions used to format the boxed message nicely
 
-    private static void printLine(int maxWidth) {
-        System.out.println(MSG_HEADER + "+" + fill('-', maxWidth + 2) + "+" + RESET_TEXT);
+    private static String boxedLine(int maxWidth) {
+        return MSG_HEADER + "+" + fill('-', maxWidth + 2) + "+" + RESET_TEXT + "\n";
     }
 
     private static int getMaxStringLen(String string) {
