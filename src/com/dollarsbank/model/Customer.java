@@ -1,6 +1,6 @@
 package com.dollarsbank.model;
 
-import java.util.List;
+// import java.util.List;
 
 public class Customer {
 
@@ -35,7 +35,7 @@ public class Customer {
     //     this.transactions = transactions;
     // }
 
-    public Customer(String username, String password, String fName, String lName, String address, String phoneNumber, String email, Account accounts, String[] transactions) {
+    public Customer(String username, String password, String fName, String lName, String address, String phoneNumber, String email, Account account) {
         this.customerId = ++customerCnt;
         this.username = username;
         this.password = password;
@@ -45,7 +45,7 @@ public class Customer {
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.account = account;
-        this.transactions = transactions;
+        this.transactions = new String[5];
     }
 
     public int getCustomerId() {
