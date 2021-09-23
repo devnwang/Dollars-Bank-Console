@@ -36,13 +36,13 @@ public class ValidationUtility {
                     isValid = false;
                     
                     // Out of Bounds error message
-                    ConsolePrinterUtility.printErrorMessage(
+                    ConsolePrinterUtility.printMessage(ConsolePrinterUtility.MSG_ERROR, 
                         "ERR: Input Out of Bounds. Your input needs to be between 1 and " + maxOpt + ".\n");
                 }
 
             // Input was not an integer
             } catch (InputMismatchException e) {
-                ConsolePrinterUtility.printErrorMessage("ERR: Input must be a numerical value.\n");
+                ConsolePrinterUtility.printMessage(ConsolePrinterUtility.MSG_ERROR, "ERR: Input must be a numerical value.\n");
             } finally {
                 // Make sure to consume the EOL characters
                 sc.nextLine();
@@ -72,13 +72,19 @@ public class ValidationUtility {
                 // Print error message based on type of input
                 switch(type) {
                     case NAME:
-                        ConsolePrinterUtility.printErrorMessage("ERR: Invalid entry. Name must not contain spaces or numerical values.");
+                        ConsolePrinterUtility.printMessage(ConsolePrinterUtility.MSG_ERROR, "ERR: Invalid entry. Name must not contain spaces or numerical values.");
                         break;
                     case USERNAME:
-                        ConsolePrinterUtility.printErrorMessage("ERR: Username must start with an alphabetical value.");
+                        ConsolePrinterUtility.printMessage(ConsolePrinterUtility.MSG_ERROR, "ERR: Username must start with an alphabetical value.");
                         break;
                     case PASSWORD:
-                        ConsolePrinterUtility.printErrorMessage("ERR: Password must be at least 8 characters long with at least one of each type: uppercase, lowercase, special.");
+                        ConsolePrinterUtility.printMessage(ConsolePrinterUtility.MSG_ERROR, "ERR: Password must be at least 8 characters long with at least one of each type: uppercase, lowercase, special.");
+                        break;
+                    case EMAIL:
+                        ConsolePrinterUtility.printMessage(ConsolePrinterUtility.MSG_ERROR, "ERR: Invalid email. Please try again.");
+                        break;
+                    case NUMBER:
+                        ConsolePrinterUtility.printMessage(ConsolePrinterUtility.MSG_ERROR, "ERR: Phone number must be entered as 10 digits.");
                         break;
                     default:
                         break;
@@ -128,7 +134,7 @@ public class ValidationUtility {
             // Input did not match the possible inputs (case-insensitive: y, yes, n, no)
             } catch (NoSuchElementException e) {
                 validInput = false;
-                ConsolePrinterUtility.printErrorMessage("ERR: Invalid input. Try again.");
+                ConsolePrinterUtility.printMessage(ConsolePrinterUtility.MSG_ERROR, "ERR: Invalid input. Try again.");
             } finally {
                 // Consume EOL
                 sc.nextLine();
