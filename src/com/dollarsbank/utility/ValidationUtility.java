@@ -6,6 +6,10 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 
 public class ValidationUtility {
+
+    private ValidationUtility() {
+        // private constructor to make class un-instantiable
+    }
     
     // Returns a valid integer input from user
     public static int getValidatedIntInput(Scanner sc, String instr, int maxOpt) {
@@ -33,7 +37,7 @@ public class ValidationUtility {
                     
                     // Out of Bounds error message
                     ConsolePrinterUtility.printErrorMessage(
-                        "ERR: Input Out of Bounds. You're input needs to be between 1 and " + maxOpt + ".\n");
+                        "ERR: Input Out of Bounds. Your input needs to be between 1 and " + maxOpt + ".\n");
                 }
 
             // Input was not an integer
@@ -49,6 +53,47 @@ public class ValidationUtility {
         return opt;
     }
 
+    public static String getValidatedStrInput(Scanner sc, String instr, StringUtil type) {
+        String input = "";
+        boolean isValid = false;
+        Pattern pattern = Pattern.compile(type.pattern);
+
+        while (!isValid) {
+            // Ask user for input
+            ConsolePrinterUtility.askForInput(instr);
+            
+            // Attempt to retrieve the correct input
+            try {
+                input = sc.next(pattern);
+                isValid = true;
+            
+            // Proper input not made
+            } catch (InputMismatchException e) {
+                // Print error message based on type of input
+                switch(type) {
+                    case NAME:
+                        ConsolePrinterUtility.printErrorMessage("ERR: Invalid entry. Name must not contain spaces or numerical values.");
+                        break;
+                    case USERNAME:
+                        ConsolePrinterUtility.printErrorMessage("ERR: Username must start with an alphabetical value.");
+                        break;
+                    case PASSWORD:
+                        ConsolePrinterUtility.printErrorMessage("ERR: Password must be at least 8 characters long with at least one of each type: uppercase, lowercase, special.");
+                        break;
+                    default:
+                        break;
+                }
+
+                // Declare input as invalid
+                isValid = false;
+            }
+        }
+        
+        // Return the validated input
+        return input;
+
+    }
+
     // Confirms whether user will go through with action
     public static boolean getConfirmation(Scanner sc, String msg) {
         boolean confirm = false;
@@ -56,7 +101,7 @@ public class ValidationUtility {
         String input;
 
         // Pattern to look for: yes, y, no, n (case insensitive)
-        Pattern pattern = Pattern.compile("y(es)?\\Z|no?\\Z", Pattern.CASE_INSENSITIVE);
+        Pattern pattern = Pattern.compile(StringUtil.CONFIRM.pattern, Pattern.CASE_INSENSITIVE);
         
         // While the current input is invalid
         while (!validInput) {
