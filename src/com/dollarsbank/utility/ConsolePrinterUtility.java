@@ -37,8 +37,8 @@ public class ConsolePrinterUtility {
     }
 
     // Error Message
-    public static final void printErrorMessage(String msg) {
-        System.out.println(MSG_ERROR + msg + RESET_TEXT);
+    public static final void printMessage(String type, String msg) {
+        System.out.println(type + msg + RESET_TEXT);
     }
 
     // Asking for user input
