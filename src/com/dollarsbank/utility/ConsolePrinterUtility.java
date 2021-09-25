@@ -23,12 +23,12 @@ public class ConsolePrinterUtility {
 
     // Instructions when created a new account
     public static final void printNewAcctHeader() {
-        System.out.println(createBoxedMsg("Enter Details for New Account"));
+        System.out.print(createBoxedMsg("Enter Details for New Account"));
     }
 
     // Login message
-    public static final String getLoginHeader() {
-        return createBoxedMsg("Enter Login Details");
+    public static final void printLoginHeader() {
+        System.out.print(createBoxedMsg("Enter Login Details"));
     }
 
     // 5 Recent Transactions header
@@ -70,7 +70,7 @@ public class ConsolePrinterUtility {
         int msgLength = getMaxStringLen(msg);
         StringBuffer sb = new StringBuffer(100);
         
-        sb.append(boxedLine(msgLength));
+        sb.append("\n" + boxedLine(msgLength));
         sb.append(String.format("%s| %s |%s%n", MSG_HEADER, padString(msg, msgLength), RESET_TEXT));
         sb.append(boxedLine(msgLength));
 
