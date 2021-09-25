@@ -11,6 +11,7 @@ import com.dollarsbank.utility.ValidationUtility;
 
 public class DollarsBankController {
     
+    // Collection of customers
     private HashMap<String, Customer> customers = new HashMap<String, Customer>();
 
     // Current logged in user
@@ -46,6 +47,8 @@ public class DollarsBankController {
 
     // Create a new account
     public void createNewCustomer(Scanner sc) {
+        boolean isAvailable;
+
         // Variables needed to create a new account
         String fName, lName, address, email, number, username, password;
         double initialDeposit;
@@ -69,7 +72,16 @@ public class DollarsBankController {
         number = ValidationUtility.getValidatedStrInput(sc, "Customer Contact Number (10-digits):", StringUtil.NUMBER);
 
         // User's username
-        username = ValidationUtility.getValidatedStrInput(sc, "Username:", StringUtil.USERNAME);
+        do {
+            username = ValidationUtility.getValidatedStrInput(sc, "Username:", StringUtil.USERNAME);
+
+            // Check if the username has already been taken
+            isAvailable = !customers.containsKey(username);
+
+            if (!isAvailable) {
+                ConsolePrinterUtility.printMessage(ConsolePrinterUtility.MSG_ERROR, "ERR: Username is unavailable. Try again.");
+            }
+        } while (!isAvailable);
         
         // User's password
         password = ValidationUtility.getValidatedStrInput(sc, "Password (Min: 8 characters; Must include: lower, upper & special):", StringUtil.PASSWORD);
@@ -84,6 +96,9 @@ public class DollarsBankController {
         customers.put(customer.getUsername(), customer);
 
         ConsolePrinterUtility.printMessage(ConsolePrinterUtility.MSG_SYS, "Account has been successfully created.");
+
+        System.out.println("Current Registered Users");
+        System.out.println(customers.keySet());
     }
 
     // Sign the current user out
