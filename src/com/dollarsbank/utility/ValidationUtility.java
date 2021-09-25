@@ -58,7 +58,9 @@ public class ValidationUtility {
         boolean isValid = false;
         Pattern pattern = Pattern.compile(type.pattern);
 
+        // Keep asking user for input until a valid input is made
         while (!isValid) {
+
             // Ask user for input
             ConsolePrinterUtility.askForInput(instr);
             
@@ -111,7 +113,7 @@ public class ValidationUtility {
         
         // While the current input is invalid
         while (!validInput) {
-            System.out.println(ConsolePrinterUtility.MSG_VALIDATION + msg + ConsolePrinterUtility.USER_INPUT);
+            System.out.println(ConsolePrinterUtility.MSG_VALIDATION + msg + " (y/n)" + ConsolePrinterUtility.USER_INPUT);
 
             // Attempt to receive input
             try {
