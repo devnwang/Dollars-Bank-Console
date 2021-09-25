@@ -39,6 +39,11 @@ public class DollarsBankApplication {
                 case 2:
                     // Guest: Login
                     // Customer: Withdraw Amount
+                    if (isLoggedIn) {
+                        // TODO: Withdraw Amount
+                    } else {
+                        controller.signCustomerIn(sc);
+                    }
                     break;
                 case 3:
                     // Guest: Exit
