@@ -10,6 +10,9 @@ import com.dollarsbank.utility.StringUtil;
 import com.dollarsbank.utility.ValidationUtility;
 
 public class DollarsBankController {
+
+    private static final int GUEST_MENU_NUM = 3;
+    private static final int CUSTOMER_MENU_NUM = 6;
     
     // Collection of customers
     private HashMap<String, Customer> customers = new HashMap<String, Customer>();
@@ -21,20 +24,29 @@ public class DollarsBankController {
 
     public DollarsBankController() {
         this.currUser = null;
-        this.numMenuOptions = 3;
+        this.numMenuOptions = GUEST_MENU_NUM;
     }
 
     public DollarsBankController(Customer user) {
         this.currUser = user;
-        this.numMenuOptions = 6;
+        this.numMenuOptions = CUSTOMER_MENU_NUM;
     }
 
+    // Check what user is logged in
     public Customer getCurrUser() {
         return this.currUser;
     }
 
+    // Control whether a user is logged in or not
     public void setCurrUser(Customer currUser) {
         this.currUser = currUser;
+        
+        if (currUser != null) {
+            setNumMenuOptions(CUSTOMER_MENU_NUM);
+        } else {
+            setNumMenuOptions(GUEST_MENU_NUM);
+        }
+
     }
 
     public int getNumMenuOptions() {
@@ -78,8 +90,10 @@ public class DollarsBankController {
             // Check if the username has already been taken
             isAvailable = !customers.containsKey(username);
 
+            // If the username is already taken
             if (!isAvailable) {
-                ConsolePrinterUtility.printMessage(ConsolePrinterUtility.MSG_ERROR, "ERR: Username is unavailable. Try again.");
+                // Notify user of unavailability
+                ConsolePrinterUtility.printMessage(ConsolePrinterUtility.MSG_ERROR, "ERR: Username is unavailable. Try another.");
             }
         } while (!isAvailable);
         
@@ -95,16 +109,69 @@ public class DollarsBankController {
         // Store customer account in memory
         customers.put(customer.getUsername(), customer);
 
+        // Notify user of successful creation
         ConsolePrinterUtility.printMessage(ConsolePrinterUtility.MSG_SYS, "Account has been successfully created.");
 
-        System.out.println("Current Registered Users");
-        System.out.println(customers.keySet());
+    }
+
+    // Sign user in
+    public void signCustomerIn(Scanner sc) {
+        boolean confirm = false;
+        String username, password;
+
+        while (!confirm) {
+            ConsolePrinterUtility.printLoginHeader();
+            
+            // Username
+            ConsolePrinterUtility.askForInput("Username:");
+            username = sc.nextLine();
+
+            // No such existing user
+            if (!customers.containsKey(username)) {
+                ConsolePrinterUtility.printMessage(ConsolePrinterUtility.MSG_ERROR, "ERR: No such user exists.");
+
+                // Ask if user would like to try again
+                confirm = ValidationUtility.getConfirmation(sc, "Would you like to try again?");
+
+                // Try again
+                if (confirm) {
+
+                    // Reset boolean to false
+                    confirm = false;
+
+                    // Go to next iteration
+                    continue;
+
+                // Don't want to try again
+                } else {
+
+                    // Breaks out of loop and returns to the menu
+                    break;
+                }
+
+            } else {
+                // Password
+                ConsolePrinterUtility.askForInput("Password:");
+                password = sc.nextLine();
+
+                // If password entered correctly
+                if (password.equals(customers.get(username).getPassword())) {
+                    confirm = true;
+                    setCurrUser(customers.get(username));
+
+                // Password is incorrect
+                } else {
+                    confirm = false;
+                    ConsolePrinterUtility.printMessage(ConsolePrinterUtility.MSG_ERROR, "Invalid Credentials. Try Again!");
+                }
+            }
+        }
     }
 
     // Sign the current user out
     public void signCustomerOut(Scanner sc) {
         // Confirm whether the user wishes to sign out
-        boolean confirm = ValidationUtility.getConfirmation(sc, "Are you sure you want to sign out? (y/n)");
+        boolean confirm = ValidationUtility.getConfirmation(sc, "Are you sure you want to sign out?");
 
         // User confirms intent to sign out
         if (confirm) {
@@ -115,13 +182,12 @@ public class DollarsBankController {
 
     public boolean exitProgram(Scanner sc) {
         // Confirm whether the user is done with the program
-        boolean confirm = ValidationUtility.getConfirmation(sc, "Are you sure you want to quit the program? (y/n)");
+        boolean confirm = ValidationUtility.getConfirmation(sc, "Are you sure you want to quit the program?");
 
         // User confirms intent to exit program
         if (confirm) {
-            System.out.println(ConsolePrinterUtility.MSG_SYS + 
-                "Thank you for banking with Dollars Bank.\nHave a nice day!" + 
-                ConsolePrinterUtility.RESET_TEXT);
+            ConsolePrinterUtility.printMessage(ConsolePrinterUtility.MSG_SYS,
+                "\nThank you for banking with Dollars Bank.\nHave a nice day!");
         }
 
         // Return choice
