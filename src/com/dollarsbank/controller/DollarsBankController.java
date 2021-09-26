@@ -6,6 +6,7 @@ import java.util.Scanner;
 import com.dollarsbank.model.Account;
 import com.dollarsbank.model.Customer;
 import com.dollarsbank.utility.ConsolePrinterUtility;
+import com.dollarsbank.utility.DataGeneratorStubUtil;
 import com.dollarsbank.utility.StringUtil;
 import com.dollarsbank.utility.ValidationUtility;
 
@@ -105,6 +106,9 @@ public class DollarsBankController {
 
         // Create a new account for the customer
         Customer customer = new Customer(username, password, fName, lName, address, number, email, new Account(initialDeposit));
+        
+        // Post customer's inital deposit
+        DataGeneratorStubUtil.postTransaction(customer, DataGeneratorStubUtil.transactionStub("Initial Deposit Amount", initialDeposit, customer.getAccount()));
 
         // Store customer account in memory
         customers.put(customer.getUsername(), customer);
@@ -176,8 +180,31 @@ public class DollarsBankController {
         // User confirms intent to sign out
         if (confirm) {
             setCurrUser(null);
-            System.out.println(ConsolePrinterUtility.MSG_SYS + "Signing out..." + ConsolePrinterUtility.RESET_TEXT);
+            System.out.println(ConsolePrinterUtility.MSG_SYS + "\nSigning out..." + ConsolePrinterUtility.RESET_TEXT);
         }
+    }
+
+    // Customer's 5 recent transaction
+    public void printRecentTransactions() {
+        ConsolePrinterUtility.printRecentTransHeader();
+
+        for (String transaction : currUser.getTransactions()) {
+            System.out.println(transaction);
+        }
+
+    }
+
+    // Displays the customers information
+    public void printCustomerInformation() {
+        String defaultDisplayFormat = "%s%-16s %s%s%n";
+
+        ConsolePrinterUtility.printCustomerInfoHeader();
+        System.out.printf("%s%-16s %s%s %s%n", ConsolePrinterUtility.MSG_SYS, "Name:", ConsolePrinterUtility.RESET_TEXT, currUser.getFName(), currUser.getLName());
+        System.out.printf(defaultDisplayFormat, ConsolePrinterUtility.MSG_SYS, "Username:", ConsolePrinterUtility.RESET_TEXT, currUser.getUsername());
+        System.out.printf(defaultDisplayFormat, ConsolePrinterUtility.MSG_SYS, "Address:", ConsolePrinterUtility.RESET_TEXT, currUser.getAddress());
+        System.out.printf(defaultDisplayFormat, ConsolePrinterUtility.MSG_SYS, "Email:", ConsolePrinterUtility.RESET_TEXT, currUser.getEmail());
+        System.out.printf(defaultDisplayFormat, ConsolePrinterUtility.MSG_SYS, "Contact Number:", ConsolePrinterUtility.RESET_TEXT, currUser.getPhoneNumber());
+        System.out.printf(defaultDisplayFormat, ConsolePrinterUtility.MSG_SYS, "Account Id:", ConsolePrinterUtility.RESET_TEXT, currUser.getAccount().getAccountId());
     }
 
     public boolean exitProgram(Scanner sc) {

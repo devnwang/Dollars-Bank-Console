@@ -26,66 +26,72 @@ public class DollarsBankApplication {
             // Get a validated input from user
             sel = ValidationUtility.getValidatedIntInput(sc, instr, controller.getNumMenuOptions());
 
-            switch (sel) {
-                case 1:
-                    // Guest: Create New Account
-                    // Customer: Deposit Amount
-                    if (isLoggedIn) {
+            // Customer is signed in
+            if (isLoggedIn) {
+                // Customer Logic
+                switch (sel) {
+                    // Deposit an amount into an account
+                    case 1:
                         // TODO: Deposit Amount
-                    } else {
-                        controller.createNewCustomer(sc);
-                    }
-                    break;
-                case 2:
-                    // Guest: Login
-                    // Customer: Withdraw Amount
-                    if (isLoggedIn) {
-                        // TODO: Withdraw Amount
-                    } else {
-                        controller.signCustomerIn(sc);
-                    }
-                    break;
-                case 3:
-                    // Guest: Exit
-                    if (controller.getCurrUser() == null) {
-                        done = controller.exitProgram(sc);
-                    }
-                    // Customer: Funds Transfer
-                    break;
-                
-                // Customer only options (must be signed in)
-                case 4:
-                case 5:
-                case 6:
-                    // Customer must be logged in for these choices
-                    if (controller.getCurrUser() != null) {
-                        switch (sel) {
-                            case 4:
-                                // TODO: Display the 5 Recent Transaction
-                                break;
-                            case 5:
-                                // TODO: Display the Customer Information
-                                break;
-                            
-                            case 6:
-                                // Signs the current customer out of their account
-                                controller.signCustomerOut(sc);
-                                break;
-                            default:
-                                break;
-                        }
-                    
-                    // On the off chance that a guest user somehow got to this point
-                    } else {
-                        ConsolePrinterUtility.printMessage(ConsolePrinterUtility.MSG_ERROR, "ERR: No such options for guest users.");
-                    }
-                    break;
+                        break;
 
-                default:
-                    break;
+                    // Withdraw available funds from an account
+                    case 2:
+                        // TODO: Withdraw amount
+                        break;
+
+                    // Transfer funds to another account
+                    case 3:
+                        // TODO: Transfer Funds
+                        break;
+
+                    // Display the last 5 transactions
+                    case 4:
+                        // TODO: 5 Recent Transactions
+                        controller.printRecentTransactions();
+                        break;
+
+                    // Display current user's information
+                    case 5:
+                        controller.printCustomerInformation();
+                        break;
+
+                    // Sign customer out of the system
+                    case 6:
+                        controller.signCustomerOut(sc);
+                        break;
+
+                    default:
+                        ConsolePrinterUtility.printMessage(ConsolePrinterUtility.MSG_ERROR, "ERR: No such option exists.");
+                        break;
+                }
+
+            // Guest user
+            } else {
+
+                // Guest Logic
+                switch (sel) {
+                    // Create a New Account
+                    case 1:
+                        controller.createNewCustomer(sc);
+                        break;
+                    
+                    // Sign into an account
+                    case 2:
+                        controller.signCustomerIn(sc);
+                        break;
+
+                    // Exit the program
+                    case 3:
+                        done = controller.exitProgram(sc);
+                        break;
+
+                    default:
+                        ConsolePrinterUtility.printMessage(ConsolePrinterUtility.MSG_ERROR, "ERR: No such option exists.");
+                        break;
+                }
             }
-            
-            //done = true;
+
         }
 
         // Close the scanner
