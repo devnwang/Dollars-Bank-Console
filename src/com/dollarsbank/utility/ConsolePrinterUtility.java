@@ -32,8 +32,13 @@ public class ConsolePrinterUtility {
     }
 
     // 5 Recent Transactions header
-    public static final String getRecentTransHeader() {
-        return createBoxedMsg("5 Recent Transactions");
+    public static final void printRecentTransHeader() {
+        System.out.print(createBoxedMsg("5 Recent Transactions"));
+    }
+
+    // Header for displaying customer information
+    public static final void printCustomerInfoHeader() {
+        System.out.println(createBoxedMsg("Your Information"));
     }
 
     // Error Message
