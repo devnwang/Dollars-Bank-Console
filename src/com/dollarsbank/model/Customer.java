@@ -1,5 +1,7 @@
 package com.dollarsbank.model;
 
+import java.util.concurrent.ArrayBlockingQueue;
+
 // import java.util.List;
 
 public class Customer {
@@ -19,7 +21,9 @@ public class Customer {
     // private List<Account> accounts;
     private Account account;
     
-    private String[] transactions;
+    private ArrayBlockingQueue<String> transactions;
+    
+    // private String[] transactions;
 
     // Keep constructor for later when expanding functionality to have multiple accounts
     // public Customer(String username, String password, String fName, String lName, String address, String phoneNumber, String email, List<Account> accounts, String[] transactions) {
@@ -45,7 +49,7 @@ public class Customer {
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.account = account;
-        this.transactions = new String[5];
+        this.transactions = new ArrayBlockingQueue<>(5);
     }
 
     public int getCustomerId() {
@@ -128,11 +132,11 @@ public class Customer {
         this.account = account;
     }
 
-    public String[] getTransactions() {
+    public ArrayBlockingQueue<String> getTransactions() {
         return this.transactions;
     }
 
-    public void setTransactions(String[] transactions) {
+    public void setTransactions(ArrayBlockingQueue<String> transactions) {
         this.transactions = transactions;
     }
 
