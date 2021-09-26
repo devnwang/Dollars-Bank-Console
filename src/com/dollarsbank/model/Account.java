@@ -6,27 +6,27 @@ public class Account {
     
     static int accountCnt = 0;
 
-    private int accountId;
+    private String accountId;
     private double balance;
     private LocalDateTime openDate;
 
     public Account() {
-        this.accountId = ++accountCnt;
+        this.accountId = String.format("U%06d", ++accountCnt);
         this.balance = 0;
         this.openDate = LocalDateTime.now();
     }
 
     public Account(double balance) {
-        this.accountId = ++accountCnt;
+        this.accountId = String.format("U%06d", ++accountCnt);
         this.balance = balance;
         this.openDate = LocalDateTime.now();
     }
 
-    public int getAccountId() {
+    public String getAccountId() {
         return this.accountId;
     }
 
-    public void setAccountId(int accountId) {
+    public void setAccountId(String accountId) {
         this.accountId = accountId;
     }
 
