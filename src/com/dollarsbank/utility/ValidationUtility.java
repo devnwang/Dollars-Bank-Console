@@ -5,6 +5,8 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
+import com.dollarsbank.model.Account;
+
 public class ValidationUtility {
 
     private ValidationUtility() {
@@ -53,6 +55,7 @@ public class ValidationUtility {
         return opt;
     }
 
+    // Retrieve user input, requiring a specific input pattern
     public static String getValidatedStrInput(Scanner sc, String instr, StringUtil type) {
         String input = "";
         boolean isValid = false;
@@ -87,6 +90,9 @@ public class ValidationUtility {
                         break;
                     case NUMBER:
                         ConsolePrinterUtility.printMessage(ConsolePrinterUtility.MSG_ERROR, "ERR: Phone number must be entered as 10 digits.");
+                        break;
+                    case MONETARY:
+                        ConsolePrinterUtility.printMessage(ConsolePrinterUtility.MSG_ERROR, "ERR: Invalid monetary value.");
                         break;
                     default:
                         break;
@@ -146,6 +152,17 @@ public class ValidationUtility {
 
         // Returns valid confirmation
         return confirm;
+    }
+
+    public static boolean checkForSsufficientFunds(Account acct, double amt) {
+
+        // If amount is greater than the account balance
+        if (amt > acct.getBalance()) {
+            ConsolePrinterUtility.printMessage(ConsolePrinterUtility.MSG_ERROR, "ERR: Insufficient Funds!");
+            return false;
+        } else {
+            return true;
+        }
     }
 
 }
