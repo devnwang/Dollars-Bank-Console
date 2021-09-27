@@ -206,6 +206,24 @@ public class DollarsBankController {
 
     }
 
+    public void makeWithdrawal(Scanner sc) {
+        double withdrawal = Double.parseDouble(ValidationUtility.getValidatedStrInput(sc, "Withdrawal Amount:", StringUtil.MONETARY));;
+
+        // If withdrawal amount is greater than the available balance
+        if (withdrawal > currUser.getAccount().getBalance()) {
+            ConsolePrinterUtility.printMessage(ConsolePrinterUtility.MSG_ERROR, "ERR: Insufficient Funds!");
+        } else {
+            Account customerAcct = currUser.getAccount();
+            customerAcct.setBalance(customerAcct.getBalance() - withdrawal);
+
+            String transaction = DataGeneratorStubUtil.transactionStub("Withdrawal", withdrawal, customerAcct);
+            DataGeneratorStubUtil.postTransaction(currUser, transaction);
+
+            ConsolePrinterUtility.printMessage(ConsolePrinterUtility.MSG_SYS, "\n" + transaction);
+        }
+        
+    }
+
     // Customer's 5 recent transaction
     public void printRecentTransactions() {
         ConsolePrinterUtility.printRecentTransHeader();

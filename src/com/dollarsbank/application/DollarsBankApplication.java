@@ -39,6 +39,7 @@ public class DollarsBankApplication {
                     // Withdraw available funds from an account
                     case 2:
                         // TODO: Withdraw amount
+                        controller.makeWithdrawal(sc);
                         break;
 
                     // Transfer funds to another account
