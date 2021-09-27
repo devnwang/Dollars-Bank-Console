@@ -8,6 +8,7 @@ public enum StringUtil {
     EMAIL("[a-zA-Z]+\\w+@[a-zA-Z]+\\.(com|net|edu|org)"),
     CONFIRM("y(es)?\\Z|no?\\Z"),
     MONETARY("\\d+(\\.\\d\\d)?"),
+    ACCOUNT("U\\d{6}"),
     ANY(".*");
 
     public final String pattern;
