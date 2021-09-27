@@ -33,6 +33,7 @@ public class DollarsBankApplication {
                     // Deposit an amount into an account
                     case 1:
                         // TODO: Deposit Amount
+                        controller.makeDeposit(sc);
                         break;
 
                     // Withdraw available funds from an account
