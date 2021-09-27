@@ -32,24 +32,21 @@ public class DollarsBankApplication {
                 switch (sel) {
                     // Deposit an amount into an account
                     case 1:
-                        // TODO: Deposit Amount
                         controller.makeDeposit(sc);
                         break;
 
                     // Withdraw available funds from an account
                     case 2:
-                        // TODO: Withdraw amount
                         controller.makeWithdrawal(sc);
                         break;
 
                     // Transfer funds to another account
                     case 3:
-                        // TODO: Transfer Funds
+                        controller.transferFunds(sc);
                         break;
 
                     // Display the last 5 transactions
                     case 4:
-                        // TODO: 5 Recent Transactions
                         controller.printRecentTransactions();
                         break;
 
@@ -98,7 +95,6 @@ public class DollarsBankApplication {
 
         // Close the scanner
         sc.close();
-
 
     }
 

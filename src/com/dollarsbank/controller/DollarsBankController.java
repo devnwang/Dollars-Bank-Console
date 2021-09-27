@@ -1,10 +1,12 @@
 package com.dollarsbank.controller;
 
+import java.util.Map;
 import java.util.HashMap;
 import java.util.Scanner;
 
 import com.dollarsbank.model.Account;
 import com.dollarsbank.model.Customer;
+import com.dollarsbank.utility.ColorsUtility;
 import com.dollarsbank.utility.ConsolePrinterUtility;
 import com.dollarsbank.utility.DataGeneratorStubUtil;
 import com.dollarsbank.utility.StringUtil;
@@ -16,7 +18,7 @@ public class DollarsBankController {
     private static final int CUSTOMER_MENU_NUM = 6;
     
     // Collection of customers
-    private HashMap<String, Customer> customers = new HashMap<String, Customer>();
+    private Map<String, Customer> customers = new HashMap<String, Customer>();
 
     // Current logged in user
     private Customer currUser;
@@ -190,6 +192,7 @@ public class DollarsBankController {
 
     // CUSTOMER LOGIC
 
+    // Deposit money into user's account
     public void makeDeposit(Scanner sc) {
         // Prompt user for deposit amount
         double deposit = Double.parseDouble(ValidationUtility.getValidatedStrInput(sc, "Deposit Amount:", StringUtil.MONETARY));
@@ -206,13 +209,12 @@ public class DollarsBankController {
 
     }
 
+    // Withdraw money from user's account
     public void makeWithdrawal(Scanner sc) {
         double withdrawal = Double.parseDouble(ValidationUtility.getValidatedStrInput(sc, "Withdrawal Amount:", StringUtil.MONETARY));;
 
         // If withdrawal amount is greater than the available balance
-        if (withdrawal > currUser.getAccount().getBalance()) {
-            ConsolePrinterUtility.printMessage(ConsolePrinterUtility.MSG_ERROR, "ERR: Insufficient Funds!");
-        } else {
+        if (ValidationUtility.checkForSsufficientFunds(currUser.getAccount(), withdrawal)) {
             Account customerAcct = currUser.getAccount();
             customerAcct.setBalance(customerAcct.getBalance() - withdrawal);
 
@@ -220,6 +222,77 @@ public class DollarsBankController {
             DataGeneratorStubUtil.postTransaction(currUser, transaction);
 
             ConsolePrinterUtility.printMessage(ConsolePrinterUtility.MSG_SYS, "\n" + transaction);
+        }
+        
+    }
+
+    // Transfer funds to another account
+    public void transferFunds(Scanner sc) {
+        boolean valid = false, confirmation;
+        String transferee = "";
+        Customer destination = null;
+        double transferAmt = 0;
+
+        // Ask for which account funds should be transferred to
+        while (!valid) {
+            // Display the accounts in a table format
+            getAccounts(currUser);
+
+            ConsolePrinterUtility.askForInput("Enter the username of the person you would like to transfer funds to:");
+            transferee = sc.nextLine();
+
+            // If the specified user is found
+            if (customers.containsKey(transferee)) {
+                valid = true;
+                destination = customers.get(transferee);
+
+                // If the selected destination is the user's own account
+                if (destination == currUser) {
+                    valid = false;
+                    ConsolePrinterUtility.printMessage(ConsolePrinterUtility.MSG_ERROR, "ERR: Cannot transfer money to yourself!");
+                }
+
+            // User not found
+            } else {
+                ConsolePrinterUtility.printMessage(ConsolePrinterUtility.MSG_ERROR, "ERR: No such user exists.");
+            }
+
+        }
+
+        // Prompt for amount to be transferred
+        do {
+            transferAmt = Double.parseDouble(ValidationUtility.getValidatedStrInput(sc, "Enter the amount you would like to transfer:", StringUtil.MONETARY));
+
+            // Check if user has enough funds to make the transfer
+            valid = ValidationUtility.checkForSsufficientFunds(currUser.getAccount(), transferAmt);
+        } while (!valid);
+
+        // Confirm that user wants to go through with transfer
+        confirmation = ValidationUtility.getConfirmation(sc,
+            String.format("Confirm transfer of $%.2f to %s (%s) [%s]? (y/n)",
+                transferAmt, 
+                destination.getFullName(), 
+                transferee, 
+                destination.getAccount().getAccountId())
+        );
+
+        if (confirmation) {
+            // Perform the transfer
+            // Remove the transfer amount from the user's account
+            currUser.getAccount().setBalance(currUser.getAccount().getBalance() - transferAmt);
+
+            String transferTransaction = DataGeneratorStubUtil.transferToStub(transferAmt, currUser.getAccount(), destination);
+
+            // Post transaction to user's account
+            DataGeneratorStubUtil.postTransaction(currUser, transferTransaction);
+
+            // Add the funds to the destination account
+            destination.getAccount().setBalance(destination.getAccount().getBalance() + transferAmt);
+
+            // Post transaction to the destination account
+            DataGeneratorStubUtil.postTransaction(destination, DataGeneratorStubUtil.transferFromStub(transferAmt, currUser, destination.getAccount()));
+
+            ConsolePrinterUtility.printMessage(ConsolePrinterUtility.MSG_SYS, transferTransaction);
         }
         
     }
@@ -257,6 +330,22 @@ public class DollarsBankController {
         if (confirm) {
             setCurrUser(null);
             System.out.println(ConsolePrinterUtility.MSG_SYS + "\nSigning out..." + ConsolePrinterUtility.RESET_TEXT);
+        }
+    }
+
+    // Retrieve list of accounts
+    private void getAccounts(Customer current) {
+        String format = "%s  %s  %s";
+        String color;
+
+        // Header
+        ConsolePrinterUtility.printMessage(ConsolePrinterUtility.MSG_HEADER, String.format(format, "Account", "Username", "Customer"));
+
+        // Print list of accounts in the system
+        for (Customer customer : customers.values()) {
+            // Use red for user's account, green for the other user accounts
+            color = customer == currUser ? ColorsUtility.ANSI_RED.value : ConsolePrinterUtility.RESET_TEXT;
+            ConsolePrinterUtility.printMessage(color, String.format(format, customer.getAccount().getAccountId(), customer.getUsername(), customer.getFullName()));
         }
     }
 
