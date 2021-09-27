@@ -92,6 +92,10 @@ public class Customer {
         this.lName = lName;
     }
 
+    public String getFullName() {
+        return this.fName + " " + this.lName;
+    }
+
     public String getAddress() {
         return this.address;
     }
