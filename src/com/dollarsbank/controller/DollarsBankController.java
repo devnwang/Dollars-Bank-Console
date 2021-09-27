@@ -58,6 +58,8 @@ public class DollarsBankController {
         this.numMenuOptions = numMenuOptions;
     }
 
+    // GUEST LOGIC
+
     // Create a new account
     public void createNewCustomer(Scanner sc) {
         boolean isAvailable;
@@ -172,16 +174,36 @@ public class DollarsBankController {
         }
     }
 
-    // Sign the current user out
-    public void signCustomerOut(Scanner sc) {
-        // Confirm whether the user wishes to sign out
-        boolean confirm = ValidationUtility.getConfirmation(sc, "Are you sure you want to sign out?");
+    public boolean exitProgram(Scanner sc) {
+        // Confirm whether the user is done with the program
+        boolean confirm = ValidationUtility.getConfirmation(sc, "Are you sure you want to quit the program?");
 
-        // User confirms intent to sign out
+        // User confirms intent to exit program
         if (confirm) {
-            setCurrUser(null);
-            System.out.println(ConsolePrinterUtility.MSG_SYS + "\nSigning out..." + ConsolePrinterUtility.RESET_TEXT);
+            ConsolePrinterUtility.printMessage(ConsolePrinterUtility.MSG_SYS,
+                "\nThank you for banking with Dollars Bank.\nHave a nice day!");
         }
+
+        // Return choice
+        return confirm;
+    }
+
+    // CUSTOMER LOGIC
+
+    public void makeDeposit(Scanner sc) {
+        // Prompt user for deposit amount
+        double deposit = Double.parseDouble(ValidationUtility.getValidatedStrInput(sc, "Deposit Amount:", StringUtil.MONETARY));
+
+        // Make the deposit (increase the accounts balance)
+        Account customerAcct = currUser.getAccount();
+        customerAcct.setBalance(customerAcct.getBalance() + deposit);
+
+        // Post the transaction to the user's account
+        String transaction = DataGeneratorStubUtil.transactionStub("Deposit", deposit, customerAcct);
+        DataGeneratorStubUtil.postTransaction(currUser, transaction);
+
+        ConsolePrinterUtility.printMessage(ConsolePrinterUtility.MSG_SYS, "\n" + transaction);
+
     }
 
     // Customer's 5 recent transaction
@@ -189,7 +211,7 @@ public class DollarsBankController {
         ConsolePrinterUtility.printRecentTransHeader();
 
         for (String transaction : currUser.getTransactions()) {
-            System.out.println(transaction);
+            System.out.println(transaction + "\n");
         }
 
     }
@@ -205,20 +227,19 @@ public class DollarsBankController {
         System.out.printf(defaultDisplayFormat, ConsolePrinterUtility.MSG_SYS, "Email:", ConsolePrinterUtility.RESET_TEXT, currUser.getEmail());
         System.out.printf(defaultDisplayFormat, ConsolePrinterUtility.MSG_SYS, "Contact Number:", ConsolePrinterUtility.RESET_TEXT, currUser.getPhoneNumber());
         System.out.printf(defaultDisplayFormat, ConsolePrinterUtility.MSG_SYS, "Account Id:", ConsolePrinterUtility.RESET_TEXT, currUser.getAccount().getAccountId());
+        System.out.printf("%s%-16s %s%.2f%n", ConsolePrinterUtility.MSG_SYS, "Account Balance:", ConsolePrinterUtility.RESET_TEXT, currUser.getAccount().getBalance());
     }
 
-    public boolean exitProgram(Scanner sc) {
-        // Confirm whether the user is done with the program
-        boolean confirm = ValidationUtility.getConfirmation(sc, "Are you sure you want to quit the program?");
+    // Sign the current user out
+    public void signCustomerOut(Scanner sc) {
+        // Confirm whether the user wishes to sign out
+        boolean confirm = ValidationUtility.getConfirmation(sc, "Are you sure you want to sign out?");
 
-        // User confirms intent to exit program
+        // User confirms intent to sign out
         if (confirm) {
-            ConsolePrinterUtility.printMessage(ConsolePrinterUtility.MSG_SYS,
-                "\nThank you for banking with Dollars Bank.\nHave a nice day!");
+            setCurrUser(null);
+            System.out.println(ConsolePrinterUtility.MSG_SYS + "\nSigning out..." + ConsolePrinterUtility.RESET_TEXT);
         }
-
-        // Return choice
-        return confirm;
     }
 
 
