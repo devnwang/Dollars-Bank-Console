@@ -238,7 +238,7 @@ public class DollarsBankController {
             // Display the accounts in a table format
             getAccounts(currUser);
 
-            ConsolePrinterUtility.askForInput("Enter the username of the person you would like to transfer funds to:");
+            ConsolePrinterUtility.askForInput("\nEnter the username of the person you would like to transfer funds to:");
             transferee = sc.nextLine();
 
             // If the specified user is found
@@ -269,7 +269,7 @@ public class DollarsBankController {
 
         // Confirm that user wants to go through with transfer
         confirmation = ValidationUtility.getConfirmation(sc,
-            String.format("Confirm transfer of $%.2f to %s (%s) [%s]? (y/n)",
+            String.format("Confirm transfer of $%.2f to %s (%s) [%s]?",
                 transferAmt, 
                 destination.getFullName(), 
                 transferee, 
@@ -335,11 +335,11 @@ public class DollarsBankController {
 
     // Retrieve list of accounts
     private void getAccounts(Customer current) {
-        String format = "%s  %s  %s";
+        String format = "%s  %-15s  %s";
         String color;
 
         // Header
-        ConsolePrinterUtility.printMessage(ConsolePrinterUtility.MSG_HEADER, String.format(format, "Account", "Username", "Customer"));
+        ConsolePrinterUtility.printMessage(ConsolePrinterUtility.MSG_HEADER, "\n" + String.format(format, "Account", "Username", "Customer"));
 
         // Print list of accounts in the system
         for (Customer customer : customers.values()) {
