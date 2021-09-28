@@ -100,6 +100,8 @@ public class ValidationUtility {
 
                 // Declare input as invalid
                 isValid = false;
+            } finally {
+                sc.nextLine();
             }
         }
         
