@@ -95,7 +95,7 @@ public class DollarsBankApplication {
 
         // Close the scanner
         sc.close();
-
+        
     }
 
 }
