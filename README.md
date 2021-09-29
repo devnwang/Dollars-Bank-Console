@@ -6,7 +6,11 @@ User Interface: Menu based with multicolor
 An MVC banking application with a user login system.
 Users are allowed to join the bank and login with their own credentials.
 
-After loggin in, users can:
+Guest users can:
+- Create an account
+- Login to an account
+
+After logging in, users can:
 - Deposit money into their account
 - Withdraw money from their account
 - Transfer money to another user's account
