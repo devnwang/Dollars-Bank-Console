@@ -1,8 +1,9 @@
 package com.dollarsbank.model;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class Account {
+public class Account implements Serializable {
     
     static int accountCnt = 0;
 
@@ -44,6 +45,11 @@ public class Account {
 
     public void setOpenDate(LocalDateTime openDate) {
         this.openDate = openDate;
+    }
+
+    // Used by FileStorageUtility to properly update the account count that doesn't get incremented by object deserialization
+    public static void incrAccountCnt() {
+        accountCnt++;
     }
 
     @Override

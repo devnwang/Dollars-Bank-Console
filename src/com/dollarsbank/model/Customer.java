@@ -1,10 +1,11 @@
 package com.dollarsbank.model;
 
+import java.io.Serializable;
 import java.util.concurrent.ArrayBlockingQueue;
 
 // import java.util.List;
 
-public class Customer {
+public class Customer implements Serializable {
 
     static int customerCnt = 0;
     
@@ -142,6 +143,11 @@ public class Customer {
 
     public void setTransactions(ArrayBlockingQueue<String> transactions) {
         this.transactions = transactions;
+    }
+
+    // Used by FileStorageUtility to properly update the customer count that doesn't get incremented by object deserialization
+    public static void incrCustomerCnt() {
+        customerCnt++;
     }
 
     @Override
