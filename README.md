@@ -19,7 +19,7 @@ After logging in, users can:
 
 ## Future Implementations
 Some features or changes that can be done in order to make the application better:
-- Saving the customers and their accounts to a file to keep the data
+- ~~Saving the customers and their accounts to a file to keep the data~~ (Merged: 10/20/2021)
     - Alternatively, can use JDBC and DAOs to connect to a database which will store the information
 - Allow users to have another account (savings account) that they can perform the same operations on
     - Customers can decide which account they would like to deposit/transfer to or withdraw from

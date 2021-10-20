@@ -1,7 +1,6 @@
 package com.dollarsbank.controller;
 
 import java.util.Map;
-import java.util.HashMap;
 import java.util.Scanner;
 
 import com.dollarsbank.model.Account;
@@ -9,6 +8,7 @@ import com.dollarsbank.model.Customer;
 import com.dollarsbank.utility.ColorsUtility;
 import com.dollarsbank.utility.ConsolePrinterUtility;
 import com.dollarsbank.utility.DataGeneratorStubUtil;
+import com.dollarsbank.utility.FileStorageUtility;
 import com.dollarsbank.utility.StringUtil;
 import com.dollarsbank.utility.ValidationUtility;
 
@@ -18,7 +18,8 @@ public class DollarsBankController {
     private static final int CUSTOMER_MENU_NUM = 6;
     
     // Collection of customers
-    private Map<String, Customer> customers = new HashMap<String, Customer>();
+    // Will import saved user data, or start with an empty map if no data exists
+    private Map<String, Customer> customers = FileStorageUtility.importData();
 
     // Current logged in user
     private Customer currUser;
@@ -186,6 +187,9 @@ public class DollarsBankController {
                 "\nThank you for banking with Dollars Bank.\nHave a nice day!");
         }
 
+        // Save user data to data file
+        FileStorageUtility.exportData(customers);
+
         // Return choice
         return confirm;
     }
@@ -233,66 +237,77 @@ public class DollarsBankController {
         Customer destination = null;
         double transferAmt = 0;
 
-        // Ask for which account funds should be transferred to
-        while (!valid) {
-            // Display the accounts in a table format
-            getAccounts(currUser);
+        // Only applicable if there is more than one account in the system
+        if (customers.size() > 1) {
 
-            ConsolePrinterUtility.askForInput("\nEnter the username of the person you would like to transfer funds to:");
-            transferee = sc.nextLine();
+            // Ask for which account funds should be transferred to
+            while (!valid) {
+                // Display the accounts in a table format
+                getAccounts(currUser);
 
-            // If the specified user is found
-            if (customers.containsKey(transferee)) {
-                valid = true;
-                destination = customers.get(transferee);
+                ConsolePrinterUtility.askForInput("\nEnter the username of the person you would like to transfer funds to:");
+                transferee = sc.nextLine();
 
-                // If the selected destination is the user's own account
-                if (destination == currUser) {
-                    valid = false;
-                    ConsolePrinterUtility.printMessage(ConsolePrinterUtility.MSG_ERROR, "ERR: Cannot transfer money to yourself!");
+                // If the specified user is found
+                if (customers.containsKey(transferee)) {
+                    valid = true;
+                    destination = customers.get(transferee);
+
+                    // If the selected destination is the user's own account
+                    if (destination == currUser) {
+                        valid = false;
+                        ConsolePrinterUtility.printMessage(ConsolePrinterUtility.MSG_ERROR, "ERR: Cannot transfer money to yourself!");
+                    }
+
+                // User not found
+                } else {
+                    ConsolePrinterUtility.printMessage(ConsolePrinterUtility.MSG_ERROR, "ERR: No such user exists.");
                 }
 
-            // User not found
-            } else {
-                ConsolePrinterUtility.printMessage(ConsolePrinterUtility.MSG_ERROR, "ERR: No such user exists.");
             }
 
-        }
+            // Prompt for amount to be transferred
+            do {
+                transferAmt = Double.parseDouble(ValidationUtility.getValidatedStrInput(sc, "Enter the amount you would like to transfer:", StringUtil.MONETARY));
 
-        // Prompt for amount to be transferred
-        do {
-            transferAmt = Double.parseDouble(ValidationUtility.getValidatedStrInput(sc, "Enter the amount you would like to transfer:", StringUtil.MONETARY));
+                // Check if user has enough funds to make the transfer
+                valid = ValidationUtility.checkForSsufficientFunds(currUser.getAccount(), transferAmt);
+            } while (!valid);
 
-            // Check if user has enough funds to make the transfer
-            valid = ValidationUtility.checkForSsufficientFunds(currUser.getAccount(), transferAmt);
-        } while (!valid);
+            // Confirm that user wants to go through with transfer
+            confirmation = ValidationUtility.getConfirmation(sc,
+                String.format("Confirm transfer of $%.2f to %s (%s) [%s]?",
+                    transferAmt, 
+                    destination.getFullName(), 
+                    transferee, 
+                    destination.getAccount().getAccountId())
+            );
 
-        // Confirm that user wants to go through with transfer
-        confirmation = ValidationUtility.getConfirmation(sc,
-            String.format("Confirm transfer of $%.2f to %s (%s) [%s]?",
-                transferAmt, 
-                destination.getFullName(), 
-                transferee, 
-                destination.getAccount().getAccountId())
-        );
+            if (confirmation) {
+                // Perform the transfer
+                // Remove the transfer amount from the user's account
+                currUser.getAccount().setBalance(currUser.getAccount().getBalance() - transferAmt);
 
-        if (confirmation) {
-            // Perform the transfer
-            // Remove the transfer amount from the user's account
-            currUser.getAccount().setBalance(currUser.getAccount().getBalance() - transferAmt);
+                String transferTransaction = DataGeneratorStubUtil.transferToStub(transferAmt, currUser.getAccount(), destination);
 
-            String transferTransaction = DataGeneratorStubUtil.transferToStub(transferAmt, currUser.getAccount(), destination);
+                // Post transaction to user's account
+                DataGeneratorStubUtil.postTransaction(currUser, transferTransaction);
 
-            // Post transaction to user's account
-            DataGeneratorStubUtil.postTransaction(currUser, transferTransaction);
+                // Add the funds to the destination account
+                destination.getAccount().setBalance(destination.getAccount().getBalance() + transferAmt);
 
-            // Add the funds to the destination account
-            destination.getAccount().setBalance(destination.getAccount().getBalance() + transferAmt);
+                // Post transaction to the destination account
+                DataGeneratorStubUtil.postTransaction(destination, DataGeneratorStubUtil.transferFromStub(transferAmt, currUser, destination.getAccount()));
 
-            // Post transaction to the destination account
-            DataGeneratorStubUtil.postTransaction(destination, DataGeneratorStubUtil.transferFromStub(transferAmt, currUser, destination.getAccount()));
+                ConsolePrinterUtility.printMessage(ConsolePrinterUtility.MSG_SYS, transferTransaction);
+            }
 
-            ConsolePrinterUtility.printMessage(ConsolePrinterUtility.MSG_SYS, transferTransaction);
+        // There are no other users in the system
+        } else {
+
+            ConsolePrinterUtility.printMessage(ConsolePrinterUtility.MSG_ERROR, "Uh-oh.");
+            ConsolePrinterUtility.printMessage(ConsolePrinterUtility.MSG_SYS, "There exists no other users to transfer funds to.");
+
         }
         
     }
