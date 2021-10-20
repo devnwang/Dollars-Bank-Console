@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 
 public class Account implements Serializable {
     
+    private static final long serialVersionUID = 1L;
+
     static int accountCnt = 0;
 
     private String accountId;

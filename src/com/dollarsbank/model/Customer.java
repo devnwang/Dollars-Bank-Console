@@ -7,6 +7,8 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 public class Customer implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     static int customerCnt = 0;
     
     private int customerId;
